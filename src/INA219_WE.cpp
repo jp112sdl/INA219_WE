@@ -78,23 +78,23 @@ void INA219_WE::setPGain(INA219_PGAIN gain){
 	switch(devicePGain){
 		case PG_40:
 			calVal = 20480;
-			currentDivider_mA = 50.0;
-			pwrMultiplier_mW = 0.4;
+			currentDivider_mA = 50;
+			pwrMultiplier_mW = 4;
 			break;
 		case PG_80:
 			calVal = 10240;
-			currentDivider_mA = 25.0;
-			pwrMultiplier_mW = 0.8;
+			currentDivider_mA = 25;
+			pwrMultiplier_mW = 8;
 			break;
 		case PG_160:
 			calVal = 8192;
-			currentDivider_mA = 20.0;
-			pwrMultiplier_mW = 1.0;
+			currentDivider_mA = 20;
+			pwrMultiplier_mW = 10;
 			break;
 		case PG_320:
 			calVal = 4096;
-			currentDivider_mA = 10.0;
-			pwrMultiplier_mW = 2.0;
+			currentDivider_mA = 10;
+			pwrMultiplier_mW = 20;
 			break;
 	}
 	
@@ -110,32 +110,33 @@ void INA219_WE::setBusRange(INA219_BUS_RANGE range){
 	writeRegister(INA219_CONF_REG, currentConfReg);
 }
 
-float INA219_WE::getShuntVoltage_mV(){
+int16_t INA219_WE::getShuntVoltage_mV(){
 	int16_t val;
 	val = (int16_t) readRegister(INA219_SHUNT_REG);
-	return (val * 0.01);	
+	return val;	
 }
 
 
-float INA219_WE::getBusVoltage_V(){
-	uint16_t val;
+uint32_t INA219_WE::getBusVoltage_V(){
+	uint32_t val;
 	val = readRegister(INA219_BUS_REG);
 	val = ((val>>3) * 4);
-	return (val * 0.001);
+	return val;
 }
 
 
-float INA219_WE::getCurrent_mA(){
+uint16_t INA219_WE::getCurrent_mA(){
 	int16_t val;
 	val = (int16_t)readRegister(INA219_CURRENT_REG);
-	return (val / currentDivider_mA);
+	if (val < 0) val = 0;
+	return ((uint16_t)val / currentDivider_mA);
 }
 
 
-float INA219_WE::getBusPower(){
+uint16_t INA219_WE::getBusPower(){
 	uint16_t val;
 	val = readRegister(INA219_PWR_REG);
-	return (val * pwrMultiplier_mW);
+	return (val * pwrMultiplier_mW) / 10;
 }
 
 bool INA219_WE::getOverflow(){

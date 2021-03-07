@@ -87,10 +87,10 @@ public:
 	void setMeasureMode(INA219_MEASURE_MODE mode);
 	void setPGain(INA219_PGAIN gain);
 	void setBusRange(INA219_BUS_RANGE range);
-	float getShuntVoltage_mV();
-	float getBusVoltage_V();
-	float getCurrent_mA();
-	float getBusPower();
+	int16_t getShuntVoltage_mV();
+	uint32_t getBusVoltage_V();
+	uint16_t getCurrent_mA();
+	uint16_t getBusPower();
 	bool getOverflow();
 	void startSingleMeasurement();
 	void powerDown();
@@ -105,8 +105,8 @@ private:
 	uint16_t calVal;
 	uint16_t calValCorrected;
 	uint16_t confRegCopy;
-	float currentDivider_mA;
-	float pwrMultiplier_mW;
+	uint16_t currentDivider_mA;
+	uint16_t pwrMultiplier_mW;
 	bool calc_overflow;
 	byte writeRegister(uint8_t reg, uint16_t val);
 	uint16_t readRegister(uint8_t reg);
